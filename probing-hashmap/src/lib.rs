@@ -4,13 +4,13 @@ use std::ptr::null;
 
 const INITIAL_BUCKETS_COUNT: usize = 1;
 
-pub struct LinkedHashMap<K, V, S = RandomState> {
-    keys: Vec<K>,
-    values: Vec<V>,
+pub struct ProbingHashMap<K, V> {
+    keys: Vec<Option<K>>,
+    values: Vec<Option<V>>,
     size: usize
 }
 
-impl <K,V> LinkedHashMap<K, V> where K : Eq + Hash {
+impl <K,V> ProbingHashMap<K, V> where K : Eq + Hash {
     pub fn new() -> Self {
         LinkedHashMap {
             keys: Vec::new(),
@@ -26,6 +26,7 @@ impl <K,V> LinkedHashMap<K, V> where K : Eq + Hash {
         };
 
 
+
     }
 
     fn mk_base_hash_index(new_key: K, keys_bucket_size: usize) -> usize {
@@ -35,8 +36,9 @@ impl <K,V> LinkedHashMap<K, V> where K : Eq + Hash {
         (has_value % (keys_bucket_size as u64)) as usize
     }
 
-    fn probe_for_insert_index(initial_hash_index: usize, keys: Vec<K>) -> Option<usize> {
-        let a = keys[initial_hash_index]
+    fn probe_for_insert_index(initial_hash_index: usize, keys: &Vec<K>) -> Option<usize> {
+        let a:  = *keys[initial_hash_index];
+
         // if keys[initial_hash_index] != Nil {
         //
         // }
