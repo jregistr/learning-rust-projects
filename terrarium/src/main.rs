@@ -25,20 +25,38 @@ use maud::{DOCTYPE, Markup};
 #[allow(unused_imports)]
 use regex::Regex;
 
+const REPO_OWNER: &str = "nytm";
+const REPO_NAME: &str = "samizdat-core";
+
 struct Comment {
     user_name: String,
     comment_text: String,
 }
 
+struct Repository {
+    name: String,
+    url: String,
+    pull_desc: PullRequestDesc,
+}
+
 struct PullRequestDesc {
     id: String,
     title: String,
+    number: String
 }
 
 struct PullRequest {
     desc: PullRequestDesc,
     comments: Vec<Comment>,
 }
+
+#[derive(GraphQLQuery)]
+#[derive(
+schema_path =  "github-schema.graphql",
+query_path = "src/repo_prs_query.graphql",
+response_derives = "Debug",
+)]
+struct RepoView;
 
 /*
 Create a web app with 3 routes.
@@ -59,9 +77,7 @@ return the pr page again but with a new comment.
 
 pub fn server(req: &Request<Vec<u8>>) -> Result<Response<Vec<u8>>, Error> {
     let path_reg: Regex = Regex::new("/pull/([^/]+)/([^/]*)/([^/]*)").expect("create regex");
-
     let path = req.uri().path();
-
     let response_text = match path_reg.captures(path) {
         None if path == "/" || path == "" => {
             root_page(&[])
@@ -81,12 +97,11 @@ pub fn server(req: &Request<Vec<u8>>) -> Result<Response<Vec<u8>>, Error> {
                 .map(|m| m.as_str());
 
             if let (Some(name), Some(comment)) = (maybe_name, maybe_comment_text) {
-                let desc = PullRequestDesc { id: String::from("super-id"), title: String::from("Coolest Pull Request") };
+                let desc = PullRequestDesc { id: String::from("super-id"), title: String::from("Coolest Pull Request"), number: "1000".to_owned() };
                 let comments = vec![Comment { user_name: String::from("jregistr"), comment_text: String::from("This is a comment") }];
-                let pr = PullRequest {desc, comments };
+                let pr = PullRequest { desc, comments };
 
-                let bla = pr_with_comments_page(&pr);
-                bla
+                pr_with_comments_page(&pr)
             } else {
                 get_pr_comments_and_display_page(pull_id)
             }
@@ -94,27 +109,35 @@ pub fn server(req: &Request<Vec<u8>>) -> Result<Response<Vec<u8>>, Error> {
         _ => return Err(format_err!("These are not the droids you're looking for."))
     };
 
-    Ok(Response::builder()
-        .status(200)
-        .body("Hello, world!".as_bytes().to_owned())
-        .unwrap())
+    let response_text = response_text?.into_string();
+
+    Ok(
+        Response::builder()
+            .status(200)
+            .body(response_text.as_bytes().to_owned())
+            .unwrap()
+    )
 }
 
-fn get_pr_comments_and_display_page(pr_id: &str) -> Result<Markup, &str> {
+fn get_pr_comments_and_display_page(pr_id: &str) -> Result<Markup, String> {
     unimplemented!()
 }
 
-fn pr_with_comments_page(pull_request: &PullRequest) -> Result<Markup, &str> {
+fn pr_with_comments_page(pull_request: &PullRequest) -> Result<Markup, String> {
     return Ok(html! {
         h1 { "This is the PR page." }
-    })
+    });
 }
 
 // Takes a slice of pull request descriptions
-fn root_page(pulls: &[PullRequestDesc]) -> Result<Markup, &str> {
+fn root_page(pulls: &[PullRequestDesc]) -> Result<Markup, String> {
     return Ok(html! {
         h1 { "Well, Hello World! From an H1" }
-    })
+    });
+}
+
+fn get_pull_requests() -> Result<PullRequestDesc, String> {
+
 }
 
 fn user_entry_point(req: &Request<Vec<u8>>) -> Response<Vec<u8>> {
@@ -131,5 +154,8 @@ fn user_entry_point(req: &Request<Vec<u8>>) -> Response<Vec<u8>> {
 }
 
 fn main() {
-    guest_app!(user_entry_point);
+
+
+
+    // guest_app!(user_entry_point);
 }

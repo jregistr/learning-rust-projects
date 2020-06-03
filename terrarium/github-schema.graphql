@@ -1013,7 +1013,14 @@ type Blob implements GitObject & Node {
     "The HTTP URL for this Git object"
     commitUrl: URI!
     id: ID!
-    "Indicates whether the Blob is binary or text"
+    """
+
+    Indicates whether the Blob is binary or text
+
+    **Upcoming Change on 2019-07-01 UTC**
+    **Description:** Type for `isBinary` will change from `Boolean!` to `Boolean`.
+    **Reason:** The `isBinary` field may return `null` when it cannot determine if a Blob is binary.
+    """
     isBinary: Boolean!
     "Indicates whether the contents is truncated"
     isTruncated: Boolean!
@@ -6918,6 +6925,8 @@ type Organization implements Actor & MemberStatusable & Node & ProfileOwner & Pr
     teamsResourcePath: URI!
     "The HTTP URL listing organization's teams"
     teamsUrl: URI!
+    "The organization's Twitter username."
+    twitterUsername: String
     "Identifies the date and time when the object was last updated."
     updatedAt: DateTime!
     "The HTTP URL for this organization."
@@ -8717,7 +8726,14 @@ type Ref implements Node {
     prefix: String!
     "The repository the ref belongs to."
     repository: Repository!
-    "The object the ref points to."
+    """
+
+    The object the ref points to.
+
+    **Upcoming Change on 2019-07-01 UTC**
+    **Description:** Type for `target` will change from `GitObject!` to `GitObject`.
+    **Reason:** The `target` field may return `null` values and is changing to nullable
+    """
     target: GitObject!
 }
 
@@ -13531,6 +13547,8 @@ type User implements Actor & Node & ProfileOwner & ProjectOwner & RegistryPackag
         "How far back in time to fetch contributed repositories"
         since: DateTime
     ): RepositoryConnection!
+    "The user's Twitter username."
+    twitterUsername: String
     "Identifies the date and time when the object was last updated."
     updatedAt: DateTime!
     "The HTTP URL for this user"
