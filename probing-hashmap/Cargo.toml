@@ -1,7 +1,0 @@
-[package]
-name = "probing-hashmap"
-version = "0.1.0"
-authors = ["Jeff Registre <jeffreyregist365@gmail.com>"]
-edition = "2018"
-
-[dependencies]
