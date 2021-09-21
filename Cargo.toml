@@ -4,5 +4,6 @@ members = [
     "adder",
     "add-one",
     "ch2-guess",
-    "ch3-concepts"
+    "ch3-concepts",
+    "ch4-ownership"
 ]
