@@ -33,6 +33,13 @@ fn main() {
     let magnitude = calculate_length(&v);
     // we can use use the vector since v is still valid
     println!("Magnitude of {:?} is {:.2}", v, magnitude);
+
+    let mut st_ex = String::from("Well, hello");
+    // here we pass a mutable reference to our mutable value
+    // note we can only have 1 mutable borrows at a time.
+    // if we have no mutable borrows, then we can have infinite immutable borrows
+    change(&mut st_ex);
+    println!("{}", st_ex);
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -56,4 +63,18 @@ fn take_vector_and_give_back(v: Vector) -> (Vector, f64) {
 fn calculate_length(v: &Vector) -> f64 {
     let mag = v.x.pow(2) + v.y.pow(2) + v.z.pow(2);
     (mag as f64).sqrt()
+    // v goes out of scope here, but because it does not own the data, the data does not
+    // get dropped
+}
+
+/*
+fn change(some_string: &String) {
+    some_string.push_str(", world");
+}
+this function will not compile. We can't modify a reference. by default, these are immutable.
+ */
+
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
 }
