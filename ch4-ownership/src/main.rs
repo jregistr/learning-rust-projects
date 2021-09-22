@@ -1,3 +1,5 @@
+mod slice;
+
 use std::fmt::{Debug, Formatter};
 
 fn main() {
@@ -40,6 +42,42 @@ fn main() {
     // if we have no mutable borrows, then we can have infinite immutable borrows
     change(&mut st_ex);
     println!("{}", st_ex);
+
+
+    // ----------------------------------------------
+    // ----------------------------------------------
+    // More on mutable and immutable references
+    let mut s = String::from("hello");
+
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
+    println!("{} and {}", r1, r2);
+    // variables r1 and r2 will not be used after this point
+
+    let r3 = &mut s; // no problem
+    println!("{}", r3);
+    // println!("{}", r1); Not Okay!
+    /*
+    Because r1 and r2 are not used after the println statement, their scope end. So its fine
+    that the r3 mutable ref is created. If we did however, use r1 or r2 after the r3 mutable ref was
+    created, then they would both be existing at the same time.
+     */
+    println!("----- moving to slices ---------");
+
+    let mut s = "well hello world".to_string();
+    let sliced = slice::first_word(&s);
+    // s.clear(); This is a mutable borrow, so if we try to use sliced, we'd be using an immutable
+    // borrow at the same time we have a mutable borrow.
+    println!("{}", sliced);
+
+    let s = "well hello world".to_string();
+    // we can pass a reference to a string to a ref str
+    // does not work the other way around though
+    // this takes advantage of implicit deref
+    println!("Second Try: {}", slice::first_word_ref_str(&s));
+
+    let ar = [1,2, 3,4, 4];
+    let ar_slice = &ar[..3];
 }
 
 #[derive(Debug, Copy, Clone)]
