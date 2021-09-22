@@ -5,5 +5,6 @@ members = [
     "add-one",
     "ch2-guess",
     "ch3-concepts",
-    "ch4-ownership"
+    "ch4-ownership",
+    "ch5-structs"
 ]
