@@ -42,6 +42,10 @@ name = "ch5-structs"
 version = "0.1.0"
 
 [[package]]
+name = "ch6-enums"
+version = "0.1.0"
+
+[[package]]
 name = "getrandom"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
