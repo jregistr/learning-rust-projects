@@ -8,5 +8,6 @@ members = [
     "ch4-ownership",
     "ch5-structs",
     "ch6-enums",
-    "ch7-structuring"
+    "ch7-structuring",
+    "ch8-common-collections"
 ]
