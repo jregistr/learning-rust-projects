@@ -1,7 +1,10 @@
+#![allow(unused)]
+
 use std::io;
 use rand;
 use rand::Rng;
 use std::cmp::Ordering;
+
 
 fn main() {
     println!("Guess the number. It's somewhere between 1 and 100");

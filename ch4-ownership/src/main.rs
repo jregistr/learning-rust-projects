@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 mod slice;
 
 use std::fmt::{Debug, Formatter};

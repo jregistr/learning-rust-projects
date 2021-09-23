@@ -1,3 +1,4 @@
+#![allow(unused)]
 /*
 A slice references a contiguous sub sequence of elements in a collection rather than the whole collection.
 A slice does not own the data.

@@ -1,4 +1,5 @@
-#[allow(unused_variables)]
+#![allow(unused)]
+
 fn main() {
     /*
     let x = 5;
@@ -148,9 +149,10 @@ fn for_loops() {
         println!("{}", index);
     }
 
+    let b = [1,2,3,4,5,6];
     // this range does not include the value 4. Will have 1, 2, 3
     let non_inclusive_range = 1..4;
     let inclusive_range = 1..= 4;
-    println!("{:?}", non_inclusive_range.it);
+    println!("{:?}", non_inclusive_range);
     println!("{:?}", inclusive_range);
 }

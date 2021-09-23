@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use add_one::{add_one, add_rand};
 
 fn main() {
