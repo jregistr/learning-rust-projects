@@ -7,5 +7,6 @@ members = [
     "ch3-concepts",
     "ch4-ownership",
     "ch5-structs",
-    "ch6-enums"
+    "ch6-enums",
+    "ch7-structuring"
 ]
