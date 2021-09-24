@@ -1,15 +1,15 @@
 [workspace]
 
 members = [
-    "adder",
-    "add-one",
-    "ch2-guess",
-    "ch3-concepts",
-    "ch4-ownership",
-    "ch5-structs",
-    "ch6-enums",
-    "ch7-structuring",
-    "ch8-common-collections",
-    "ch9-errors",
-    "ch10-generics"
+    "rust-book/adder",
+    "rust-book/add-one",
+    "rust-book/ch2-guess",
+    "rust-book/ch3-concepts",
+    "rust-book/ch4-ownership",
+    "rust-book/ch5-structs",
+    "rust-book/ch6-enums",
+    "rust-book/ch7-structuring",
+    "rust-book/ch8-common-collections",
+    "rust-book/ch9-errors",
+    "rust-book/ch10-generics"
 ]
