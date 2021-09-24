@@ -9,5 +9,6 @@ members = [
     "ch5-structs",
     "ch6-enums",
     "ch7-structuring",
-    "ch8-common-collections"
+    "ch8-common-collections",
+    "ch9-errors"
 ]
