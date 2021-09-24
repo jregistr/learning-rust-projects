@@ -1,4 +1,5 @@
 #![allow(unused)]
+mod lifetimes;
 
 use std::fmt::{Display, Debug};
 use std::iter::Sum;
