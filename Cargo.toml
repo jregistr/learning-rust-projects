@@ -11,5 +11,6 @@ members = [
     "rust-book/ch7-structuring",
     "rust-book/ch8-common-collections",
     "rust-book/ch9-errors",
-    "rust-book/ch10-generics"
+    "rust-book/ch10-generics",
+    "rust-book/ch11-tests"
 ]
