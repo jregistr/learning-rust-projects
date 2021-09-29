@@ -21,24 +21,22 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn from_args(args: &[String]) -> Result<Config, &str> {
-        if args.len() < 3 {
-            return Err("Not enough args");
-        }
-        let (query, fnn) = (&args[1], &args[2]);
+    pub fn from_args(args: env::Args) -> Result<Config, &'static str> {
+        // first argument is the program name. let's skip it.
+        let mut args = args.skip(1);
+
+        let query = args.next().ok_or("Didn't provide a query string")?;
+        let file_name = args.next().ok_or("Didn't provide a file name")?;
+
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
-        Ok(Config { file_name: fnn.clone(), query: query.clone(), case_sensitive })
+        Ok(Config { file_name, query, case_sensitive })
     }
 }
 
 fn search<'a>(query: &str, content: &'a str, contains: fn(&str, &str) -> bool) -> Vec<&'a str> {
-    let mut res = Vec::new();
-    for line in content.lines() {
-        if contains(line, query) {
-            res.push(line);
-        }
-    }
-    res
+    content.lines()
+        .filter(|&line| contains(line, query))
+        .collect()
 }
 
 fn line_contains(line: &str, query: &str) -> bool {

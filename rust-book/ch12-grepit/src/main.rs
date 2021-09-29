@@ -3,8 +3,7 @@ use std::{process, env};
 use ch12_grepit::{Config};
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let config = Config::from_args(&args)
+    let config = Config::from_args(env::args())
         .unwrap_or_else(|err| {
             eprintln!("Problem processing args: {}", err);
             process::exit(1)
