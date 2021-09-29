@@ -13,5 +13,6 @@ members = [
     "rust-book/ch9-errors",
     "rust-book/ch10-generics",
     "rust-book/ch11-tests",
-    "rust-book/ch12-grepit"
+    "rust-book/ch12-grepit",
+    "rust-book/ch13-functional",
 ]
