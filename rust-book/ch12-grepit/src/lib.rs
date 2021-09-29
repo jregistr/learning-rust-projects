@@ -1,11 +1,13 @@
-use std::fs;
+use std::{fs, env};
 use std::error::Error;
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let file_str = fs::read_to_string(&config.file_name)?;
     let query = &config.query;
 
-    for line in search(query, &file_str) {
+    let c = if config.case_sensitive { line_contains } else { line_contains_case_insensitive };
+
+    for line in search(query, &file_str, c) {
         println!("{}", line);
     }
     Ok(())
@@ -15,6 +17,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 pub struct Config {
     file_name: String,
     query: String,
+    case_sensitive: bool,
 }
 
 impl Config {
@@ -23,18 +26,27 @@ impl Config {
             return Err("Not enough args");
         }
         let (query, fnn) = (&args[1], &args[2]);
-        Ok(Config { file_name: fnn.clone(), query: query.clone() })
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+        Ok(Config { file_name: fnn.clone(), query: query.clone(), case_sensitive })
     }
 }
 
-fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+fn search<'a>(query: &str, content: &'a str, contains: fn(&str, &str) -> bool) -> Vec<&'a str> {
     let mut res = Vec::new();
     for line in content.lines() {
-        if line.contains(query) {
+        if contains(line, query) {
             res.push(line);
         }
     }
     res
+}
+
+fn line_contains(line: &str, query: &str) -> bool {
+    line.contains(query)
+}
+
+fn line_contains_case_insensitive(line: &str, query: &str) -> bool {
+    line.to_lowercase().contains(&query.to_lowercase())
 }
 
 #[cfg(test)]
@@ -48,6 +60,16 @@ mod tests {
 Rust: Safety, Speed, Productivity.
 pick all three.
         ";
-        assert_eq!(vec!["pick all three."], search(query, content));
+        assert_eq!(vec!["pick all three."], search(query, content, line_contains));
+    }
+
+    #[test]
+    fn search_case_insensitively() {
+        let query = "ThReE";
+        let content = "\
+Rust: Safety, Speed, Productivity.
+pick all three.
+        ";
+        assert_eq!(vec!["pick all three."], search(query, content, line_contains_case_insensitive));
     }
 }
