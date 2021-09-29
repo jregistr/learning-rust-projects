@@ -14,11 +14,6 @@ fn main() {
 }
 
 fn generate_workout(intensity: u32, random_number: u32) {
-    // let expensive_closure = |num| {
-    //     println!("calculating slowly...");
-    //     thread::sleep(Duration::from_secs(2));
-    //     num
-    // };
     let mut cached = Cacher::new(|num| {
         println!("calculating slowly...");
         thread::sleep(Duration::from_secs(2));
@@ -61,13 +56,5 @@ impl<T> Cacher<T>
     fn value(&mut self, arg: u32) -> u32 {
         *self.values.entry(arg)
             .or_insert((self.func)(arg))
-        // match self.values.get(&arg) {
-        //     Some(&v) => v,
-        //     _ => {
-        //         let v = (self.func)(arg);
-        //         self.values.insert(arg, v);
-        //         v
-        //     }
-        // }
     }
 }
