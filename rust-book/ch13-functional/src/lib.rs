@@ -8,7 +8,7 @@ mod tests {
         let viter = v.iter();
         //references to the values inside v
         // we didn't make viter mutable because the for loop
-        //takes ownership of viter and makes it immutable in background
+        //takes ownership of viter and makes it mutable in background
         for val in viter {
             println!("{}", val);
         }

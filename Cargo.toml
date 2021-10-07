@@ -1,18 +1,5 @@
 [workspace]
 
 members = [
-    "rust-book/adder",
-    "rust-book/add-one",
-    "rust-book/ch2-guess",
-    "rust-book/ch3-concepts",
-    "rust-book/ch4-ownership",
-    "rust-book/ch5-structs",
-    "rust-book/ch6-enums",
-    "rust-book/ch7-structuring",
-    "rust-book/ch8-common-collections",
-    "rust-book/ch9-errors",
-    "rust-book/ch10-generics",
-    "rust-book/ch11-tests",
-    "rust-book/ch12-grepit",
-    "rust-book/ch13-functional",
+    "rust-book/*"
 ]
