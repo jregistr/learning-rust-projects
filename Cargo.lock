@@ -43,6 +43,10 @@ name = "ch16-fearless"
 version = "0.1.0"
 
 [[package]]
+name = "ch17-object-orientation"
+version = "0.1.0"
+
+[[package]]
 name = "ch2-guess"
 version = "0.1.0"
 dependencies = [
