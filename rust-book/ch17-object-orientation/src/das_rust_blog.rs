@@ -36,6 +36,10 @@ impl PendingReviewPost {
     fn approve(self) -> Post {
         Post { content: self.content }
     }
+
+    fn reject(self) -> DraftPost {
+        DraftPost { content: self.content }
+    }
 }
 
 #[cfg(test)]
@@ -51,5 +55,15 @@ mod tests {
         let post = post.approve();
 
         assert_eq!("Today I ate some tasty food in the morning", post.content);
+    }
+
+    #[test]
+    fn test_reject() {
+        let mut post = Post::new();
+        post.add_text("We add text");
+        let post = post.request_review();
+        let mut post = post.reject();
+        post.add_text(". Hello!");
+        assert_eq!(post.content, "We add text. Hello!");
     }
 }

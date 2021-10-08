@@ -1,5 +1,4 @@
 mod for_the_post {
-
     pub struct Post {
         content: String,
         state: Option<Box<dyn State>>,
@@ -18,7 +17,9 @@ mod for_the_post {
         }
 
         pub fn add_text(&mut self, to_add: &str) {
-            self.content.push_str(to_add);
+            if let Some(true) = self.state.as_ref().map(|v| v.can_edit()) {
+                self.content.push_str(to_add);
+            }
         }
 
         pub fn request_review(&mut self) {
@@ -32,6 +33,12 @@ mod for_the_post {
                 self.state = Some(state.approve())
             }
         }
+
+        pub fn reject(&mut self) {
+            if let Some(state) = self.state.take() {
+                self.state = Some(state.reject())
+            }
+        }
     }
 
     trait State {
@@ -42,31 +49,57 @@ mod for_the_post {
         fn content<'a>(&self, post: &'a Post) -> Option<&'a str> {
             None
         }
+
+        fn reject(self: Box<Self>) -> Box<dyn State>;
+
+        fn can_edit(&self) -> bool {
+            false
+        }
     }
 
     struct Draft {}
 
-    struct PendingReview {}
+    struct PendingReview {
+        reviewed_count: i32,
+    }
 
     struct Published {}
 
     impl State for Draft {
         fn request_review(self: Box<Self>) -> Box<dyn State> {
-            Box::new(PendingReview {})
+            Box::new(PendingReview { reviewed_count: 0 })
         }
 
         fn approve(self: Box<Self>) -> Box<dyn State> {
             self
         }
+
+        fn reject(self: Box<Self>) -> Box<dyn State> {
+            self
+        }
+
+        fn can_edit(&self) -> bool {
+            true
+        }
     }
 
     impl State for PendingReview {
         fn request_review(self: Box<Self>) -> Box<dyn State> {
-            Box::new(PendingReview {})
+            self
         }
 
-        fn approve(self: Box<Self>) -> Box<dyn State> {
-            Box::new(Published {})
+        // we need 2 approvals to publish
+        fn approve(mut self: Box<Self>) -> Box<dyn State> {
+            self.reviewed_count += 1;
+            if self.reviewed_count > 1 {
+                Box::new(Published {})
+            } else {
+                self
+            }
+        }
+
+        fn reject(self: Box<Self>) -> Box<dyn State> {
+            Box::new(Draft {})
         }
     }
 
@@ -81,6 +114,10 @@ mod for_the_post {
         fn content<'a>(&self, post: &'a Post) -> Option<&'a str> {
             let as_ref = post.content.as_str();
             Some(as_ref)
+        }
+
+        fn reject(self: Box<Self>) -> Box<dyn State> {
+            self
         }
     }
 }
@@ -100,6 +137,59 @@ mod tests {
         assert_eq!(None, post.content());
 
         post.approve();
+        assert_eq!(None, post.content());
+        post.approve();
         assert_eq!(Some("I ate some very state food this morning"), post.content());
+    }
+
+    #[test]
+    fn test_reject() {
+        let mut post = Post::new();
+        post.add_text("We test das reject");
+        assert_eq!(None, post.content());
+
+        post.request_review();
+        assert_eq!(None, post.content());
+
+        post.reject();
+        assert_eq!(None, post.content());
+        post.approve();
+        assert_eq!(None, post.content());
+
+        post.request_review();
+        assert_eq!(None, post.content());
+        post.approve();
+        post.approve();
+        assert_eq!(Some("We test das reject"), post.content());
+    }
+
+    #[test]
+    fn test_add_in_draft() {
+        let mut post = Post::new();
+        post.add_text("This is the very first sentence.");
+
+        // set to review, add text to it and approve and check the text did not change
+        post.request_review();
+        post.add_text("And this won't be in it");
+        post.approve();
+        post.approve();
+        assert_eq!(Some("This is the very first sentence."), post.content());
+    }
+
+    #[test]
+    fn test_reject_then_add_as_draft() {
+        let mut post = Post::new();
+        post.add_text("This is the very first sentence.");
+
+        post.request_review();
+        post.add_text("And this won't be in it.");
+
+        post.reject();
+        post.add_text(" The editor is amazing.");
+        post.request_review();
+        post.approve();
+        post.approve();
+
+        assert_eq!(Some("This is the very first sentence. The editor is amazing."), post.content());
     }
 }
