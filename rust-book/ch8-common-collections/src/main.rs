@@ -123,6 +123,7 @@ fn do_hashmap() {
 
     // let's add 1 to a value or set 1 if it does not exist using the entry
     *b.entry(String::from("VW")).or_insert(0) += 1;
+    b.entry(String::from("OW")).or_insert(1);
 
     println!("{:?}", b);
 }
