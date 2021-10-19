@@ -62,6 +62,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "ch20-web-server"
+version = "0.1.0"
+
+[[package]]
 name = "ch3-concepts"
 version = "0.1.0"
 
